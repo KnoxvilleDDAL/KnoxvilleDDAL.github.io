@@ -1,0 +1,73 @@
+<html>
+    <head>
+        <script type="text/javascript">
+            function convertXpToAdvPoints()
+            {
+                var xpLevels = [0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000, 85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000];
+                var xpCurrentText = document.getElementById("xpCurrent").value;
+                var xpCurrent = parseInt(xpCurrentText);
+
+                if (xpCurrent >= xpLevels[xpLevels.length - 1])
+                {
+                    showXpResult("You're already at the maximum level. The system has no conversion for you. Enjoy level 20.");
+                }
+                else if (xpCurrent > 0)
+                {
+                    var levelCurrentFound = false;
+                    var level = 0;
+                    while (!levelCurrentFound && level < (xpLevels.length - 1))
+                    {
+                        levelCurrentFound = xpCurrent < xpLevels[level + 1];
+                        level++;
+                    }
+                    
+                    if (levelCurrentFound && level > 0)
+                    {
+                        var minXpForCurrentLevel = xpLevels[level - 1];
+                        var minXpForNextLevel = xpLevels[level];
+                        var excessXp = xpCurrent - minXpForCurrentLevel;
+                        var totalXpNeededToLevel = minXpForNextLevel - minXpForCurrentLevel;
+                        var lengthIntoLevel = excessXp / totalXpNeededToLevel;
+                        
+                        var totalAdvCkPointsForNextLevel = (level < 5) ? 4 : 8;
+                        var currentCkPoints = lengthIntoLevel * totalAdvCkPointsForNextLevel;
+                        var minCkPoints = Math.floor(currentCkPoints);
+                        var maxCkPoints = Math.ceil(currentCkPoints);
+
+                        var message = "Your current level is " + level + "<br />";
+                        message += "Your calculated XP advancement checkpoints are " + currentCkPoints + "<br />";
+                        message += "<br />";
+                        message += "You can choose your current number of<br />";
+                        message += "XP advancement checkpoints to be either<br />";
+                        message += minCkPoints + " or " + maxCkPoints + "<br />";
+                        message += "<br />";
+                        message += "Using slow progression, you can choose your<br />";
+                        message += "XP advancement checkpoints to be either<br />";
+                        message += (minCkPoints / 2) + " or " + (maxCkPoints / 2) + "<br />";
+                        showXpResult(message);
+                    }
+                    else
+                    {
+                        showXpResult("Can't help you, sorry.")
+                    }
+                }
+                else {
+                    showXpResult("Can't help you, sorry.")
+                }
+        }
+
+            function showXpResult(message)
+            {
+                var xpResultElement = document.getElementById("xpResult");
+                xpResultElement.innerHTML = message;
+            }
+        </script>
+    </head>
+    <body>
+        <label for="xpCurrent">Enter Your Current XP total</label><br />
+        <input type="text" id="xpCurrent" />
+        <button onclick="convertXpToAdvPoints();">Convert</button><br />
+        <br />
+        <span id="xpResult"></span>
+    </body>
+</html>
